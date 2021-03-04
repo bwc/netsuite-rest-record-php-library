@@ -1,5 +1,6 @@
 <?php
 include_once('./RecordDefinitionsParser.php');
+include_once('./RecordSchemaParser.php');
 include_once('./PHPGenerator.php');
 include_once('./base/Loader.php');
 
@@ -30,7 +31,7 @@ class Index
     {
         echo "Starting...\n";
 
-        echo sprintf("[1/3] Loading %s...\n", $this->getVersion());
+        echo sprintf("[1/4] Loading %s...\n", $this->getVersion());
         libxml_use_internal_errors(true);
         $baseDirectory = $this->_prepareBaseDirectory();
         $source = $this->_loadSource();
@@ -38,11 +39,16 @@ class Index
         $domDoc->loadHTML($source);
         $domXPath = new DOMXPath($domDoc);
 
-        echo sprintf("[2/3] Loading Record Definitions...\n");
+        echo sprintf("[2/4] Loading Record Definitions...\n");
         $recordDefinitionsParser = new RecordDefinitionsParser($domXPath);
 
-        echo sprintf("[3/3] Generating php classes...\n");
-        (new PHPGenerator($baseDirectory))->run($recordDefinitionsParser);
+        echo sprintf("[3/4] Loading Record Definitions...\n");
+        $recordSchemaParser = new RecordSchemaParser($domXPath);
+
+        echo sprintf("[4/4] Generating php classes...\n");
+        (new PHPGenerator($baseDirectory))->run(
+            $recordDefinitionsParser, $recordSchemaParser
+        );
 
         echo "Finished.\n";
     }

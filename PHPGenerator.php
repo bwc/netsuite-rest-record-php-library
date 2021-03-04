@@ -4,9 +4,11 @@ class PHPGenerator
 {
     const REQUEST_DIR = 'NSRecord/';
     const REQUEST_CLASS_PREFIX = 'NSRecord_';
-    const DOC_TYPE_TAB_SPACES = '16';
+    const DOC_TYPE_TAB_SPACES = '24';
     const TEMPLATE_REQUEST_CLASS = "<?php\nclass %s extends RequestAbstract\n{\n%s}\n";
     const TEMPLATE_FUNCTION = "   /**\n    * %s\n    */\n    %s\n    {\n%s\n    }\n";
+    const SCHEMA_TEMPLATE = "   /**\n%s* [%s]\n%s* %s\n%s*\n%s* @var array\n%s*/\n%spublic static \$schema = [\n%s\n%s];%s\n";
+    const SCHEMA_LINE_TEMPLATE = "%s'%s',%s// %s%s%s%s";
 
     /**
      * @var string
@@ -25,16 +27,18 @@ class PHPGenerator
 
     /**
      * @param RecordDefinitionsParser $requestParser
+     * @param RecordSchemaParser $schemaParser
      */
-    public function run(RecordDefinitionsParser $requestParser)
+    public function run($requestParser, $schemaParser)
     {
         $i = 0;
         $requests = $requestParser->getData();
+        $schemaData = $schemaParser->getData();
         $recordCount = count($requests);
         foreach ($requests as $requestName => $request) {
             $className = Formatter::formatClassName($requestName, self::REQUEST_CLASS_PREFIX);
             $classFileName = Formatter::formatClassName($requestName);
-            $phpFunctions = [];
+            $phpFunctions = [$this->_generateSchemaDefinition($requestName, $schemaData[$requestName])];
             echo sprintf(
                 "\nGenerating Record Definition...\tRequest %d/%d - %s...\n",
                 ++$i,
@@ -85,13 +89,16 @@ class PHPGenerator
         $returnTypes = [];
         $phpFunctionDefinition = "public function $name(%s)";
 
+        $hasBodyToPost = false;
         $phpDocLines[] = "{$data['PATH']['method']} {$data['PATH']['path']}";
         $phpDocLines[] = '';
-        if (!empty($data['REQUEST_BODY'])) {
-            $phpDocLines[] = "{$data['REQUEST_BODY']}";
+        if (!empty($data['REQUEST BODY'])) {
+            $hasBodyToPost = true;
+            $functionParameters[] = '$body';
+            $phpDocLines[] = '@param $body {' . $data['REQUEST BODY']['schema-name'] . '}';
         }
         foreach ($data['REQUEST PARAMETERS'] as $p) {
-            [$param, $phpDocLine, $queryName, $functionName] = $this->_generatePhpFunctionParameter($p);
+            list($param, $phpDocLine, $queryName, $functionName) = $this->_generatePhpFunctionParameter($p);
             $functionParameters[] = $param;
             $phpDocLines[] = $phpDocLine;
             $queryParameters[] = [
@@ -121,8 +128,48 @@ class PHPGenerator
             $this->_generatePhpFunctionBody(
                 $data['PATH']['path'],
                 $data['PATH']['method'],
-                $queryParameters
+                $queryParameters,
+                $hasBodyToPost
             )
+        );
+    }
+
+    /**
+     * @param array $data
+     * @throws NetsuiteException
+     */
+    private function _generateSchemaDefinition($recordName, $data)
+    {
+        $lines = [];
+        foreach ($data['fields'] as $name => $config) {
+            $spacing = strlen($name) < self::DOC_TYPE_TAB_SPACES
+                ? str_repeat(' ', self::DOC_TYPE_TAB_SPACES - strlen($name)) : '';
+
+            $lines[] = sprintf(
+                self::SCHEMA_LINE_TEMPLATE,
+                Formatter::tab(2),
+                $name,
+                $spacing,
+                Formatter::parseTypes($config['type'], '', $config['format']),
+                $config['range'] ? ", range:{$config['range']}" : '',
+                $config['read_only'] ? ", [read_only]" : '',
+                $config['enum_items'] ? ' enum(' . implode(', ', $config['enum_items']) . ')' : ''
+            );
+        }
+
+        return sprintf(
+            self::SCHEMA_TEMPLATE,
+            Formatter::tab(),
+            $recordName,
+            Formatter::tab(),
+            $data['desc'],
+            Formatter::tab(),
+            Formatter::tab(),
+            Formatter::tab(),
+            Formatter::tab(),
+            implode("\n", $lines),
+            Formatter::tab(),
+            Formatter::tab()
         );
     }
 
@@ -168,9 +215,10 @@ class PHPGenerator
      * @param string $path
      * @param string $method
      * @param array $queryParameters
+     * @param bool $hasBodyToPost
      * @return string
      */
-    private function _generatePhpFunctionBody($path, $method, $queryParameters)
+    private function _generatePhpFunctionBody($path, $method, $queryParameters, $hasBodyToPost)
     {
         $hasUrlParams = false;
         $buildPath = sprintf("\$path = \"%s\";", $path);
@@ -215,11 +263,12 @@ class PHPGenerator
         }
 
         $body = sprintf(
-            "%s%s\n%s\$response = \$this->_makeRequest('%s', \$path);\n\n%sreturn \$response;",
+            "%s%s\n%s\$response = \$this->_makeRequest('%s', \$path%s);\n\n%sreturn \$response;",
             Formatter::tab(2),
             $buildPath,
             Formatter::tab(2),
             $method,
+            $hasBodyToPost ? ', $body' : '',
             Formatter::tab(2)
         );
 
