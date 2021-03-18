@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 $base = dirname(__FILE__);
 include_once($base . "/RequestAbstract.php");
+include_once($base . "/SuiteQL.php");
 include_once($base . "/NetsuiteException.php");
 foreach (glob("$base/NSRecord/*.php") as $filename) {
     include_once $filename;

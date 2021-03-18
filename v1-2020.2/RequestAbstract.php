@@ -32,7 +32,7 @@ class RequestAbstract
         if (self::$_config === []) {
             self::$_config = $loader->getConfig();
         }
-        $this->_baseurl = sprintf(self::BASE_URL_PATTERN, self::$_config['account_id']);
+        $this->_baseurl = sprintf(static::BASE_URL_PATTERN, self::$_config['account_id']);
     }
 
     /**
@@ -40,10 +40,11 @@ class RequestAbstract
      * @param string $path
      * @param string $body
      * @param int $tries
+     * @param array $additionalHeaders
      * @return stdClass
      * @throws NetsuiteException
      */
-    protected function _makeRequest($method, $path, $body = null, $tries = 3)
+    protected function _makeRequest($method, $path, $body = null, $additionalHeaders = [], $tries = 3)
     {
         for ($i = 0; $i < $tries; $i++) {
             try {
@@ -95,6 +96,9 @@ class RequestAbstract
                     'Cookie: NS_ROUTING_VERSION=LAGGING',
                     'Content-Type: application/json',
                 ];
+                if ($additionalHeaders) {
+                    $header = array_merge($header, $additionalHeaders);
+                }
 
                 $curl = curl_init();
                 $curlParams = [

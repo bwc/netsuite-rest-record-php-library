@@ -31,6 +31,7 @@ class PHPGenerator
      */
     public function run($requestParser, $schemaParser)
     {
+        // NOTE: Changes to $requestParser & $schemaParser may require manual changes to base/NSRecord/CustomRecord.php
         $i = 0;
         $requests = $requestParser->getData();
         $schemaData = $schemaParser->getData();
