@@ -110,9 +110,9 @@ class PHPGenerator
         }
         foreach ($data['RESPONSES'] as $r) {
             if ($r['title'] === '200 OK') {
-                $phpDocLines[] = "@return string json:{$r['schema']} - {$r['value']} ";
+                $phpDocLines[] = "@return string json:{$r['schema']} - {$r['value']}";
             } else {
-                $phpDocLines[] = "@meta [{$r['title']}] {$r['schema']} - {$r['value']} ";
+                $phpDocLines[] = "@response [{$r['title']}] {$r['schema']} - {$r['value']}";
             }
 
         }

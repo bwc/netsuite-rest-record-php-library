@@ -40,8 +40,8 @@ class NSRecord_Subsidiary extends RequestAbstract
     * @param string $q                 Search query used to filter results. (in query)
     * @param int $limit                The limit used to specify the number of results on a single page. (in query)
     * @param int $offset               The offset used for selecting a specific page of results. (in query)
-    * @return string json:subsidiaryCollection - List of records 
-    * @meta [default] nsError - Error response 
+    * @return string json:subsidiaryCollection - List of records
+    * @response [default] nsError - Error response
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
@@ -69,8 +69,8 @@ class NSRecord_Subsidiary extends RequestAbstract
     * 
     * @param numeric $id [Required]    Internal identifier (in path)
     * @param bool $expandSubResources  Set to true to automatically expand all sublists, sublist lines and subrecords on this record. (in query)
-    * @return string json:subsidiary - Retrieved record 
-    * @meta [default] nsError - Error response 
+    * @return string json:subsidiary - Retrieved record
+    * @response [default] nsError - Error response
     */
     public function getRecord($id = null, $expandSubResources = null)
     {

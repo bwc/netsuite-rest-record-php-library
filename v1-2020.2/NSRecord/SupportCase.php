@@ -91,8 +91,8 @@ class NSRecord_SupportCase extends RequestAbstract
     * @param string $q                 Search query used to filter results. (in query)
     * @param int $limit                The limit used to specify the number of results on a single page. (in query)
     * @param int $offset               The offset used for selecting a specific page of results. (in query)
-    * @return string json:supportCaseCollection - List of records 
-    * @meta [default] nsError - Error response 
+    * @return string json:supportCaseCollection - List of records
+    * @response [default] nsError - Error response
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
@@ -122,8 +122,8 @@ class NSRecord_SupportCase extends RequestAbstract
     * @param string $replace           Names of sublists on this record. All lines on these sublists will be replaced with lines from input. Sublists not specified here will have lines added to record. Names are delimited by comma. (in query)
     * @param string enum(Error, Warning, Ignore) $xNetSuitePropertyNameValidationSets strictness of property name validation. (in header)
     * @param string enum(Error, Warning, Ignore) $xNetSuitePropertyValueValidationSets strictness of property value validation. (in header)
-    * @meta [204 No Content]  - Inserted record 
-    * @meta [default] nsError - Error response 
+    * @response [204 No Content]  - Inserted record
+    * @response [default] nsError - Error response
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
@@ -150,8 +150,8 @@ class NSRecord_SupportCase extends RequestAbstract
     * DELETE /supportCase/{id}
     * 
     * @param numeric $id [Required]    Internal identifier (in path)
-    * @meta [204 No Content]  - Removed record 
-    * @meta [default] nsError - Error response 
+    * @response [204 No Content]  - Removed record
+    * @response [default] nsError - Error response
     */
     public function removeRecord($id = null)
     {
@@ -166,8 +166,8 @@ class NSRecord_SupportCase extends RequestAbstract
     * 
     * @param numeric $id [Required]    Internal identifier (in path)
     * @param bool $expandSubResources  Set to true to automatically expand all sublists, sublist lines and subrecords on this record. (in query)
-    * @return string json:supportCase - Retrieved record 
-    * @meta [default] nsError - Error response 
+    * @return string json:supportCase - Retrieved record
+    * @response [default] nsError - Error response
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
@@ -192,8 +192,8 @@ class NSRecord_SupportCase extends RequestAbstract
     * @param string enum(Error, Warning, Ignore) $xNetSuitePropertyNameValidationSets strictness of property name validation. (in header)
     * @param string enum(Error, Warning, Ignore) $xNetSuitePropertyValueValidationSets strictness of property value validation. (in header)
     * @param string $replace           Names of sublists on this record. All lines on these sublists will be replaced with lines from input. Sublists not specified here will have lines added to record. Names are delimited by comma. (in query)
-    * @meta [204 No Content]  - Updated record 
-    * @meta [default] nsError - Error response 
+    * @response [204 No Content]  - Updated record
+    * @response [default] nsError - Error response
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
@@ -224,8 +224,8 @@ class NSRecord_SupportCase extends RequestAbstract
     * @param string enum(Error, Warning, Ignore) $xNetSuitePropertyNameValidationSets strictness of property name validation. (in header)
     * @param string enum(Error, Warning, Ignore) $xNetSuitePropertyValueValidationSets strictness of property value validation. (in header)
     * @param string $replace           Names of sublists on this record. All lines on these sublists will be replaced with lines from input. Sublists not specified here will have lines added to record. Names are delimited by comma. (in query)
-    * @meta [204 No Content]  - Upserted record 
-    * @meta [default] nsError - Error response 
+    * @response [204 No Content]  - Upserted record
+    * @response [default] nsError - Error response
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
