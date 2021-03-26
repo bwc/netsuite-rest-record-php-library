@@ -34,7 +34,7 @@ class RequestAbstract
      * @param string $method
      * @param string $path
      * @param array $params
-     * @param string $body
+     * @param string|array $body
      * @param int $tries
      * @param array $additionalHeaders
      * @return stdClass
@@ -123,6 +123,9 @@ class RequestAbstract
                     CURLOPT_HTTPHEADER      => $header,
                 ];
                 if ($body) {
+                    if (is_array($body)) {
+                        $body = json_encode($body);
+                    }
                     $curlParams[CURLOPT_POSTFIELDS] = $body;
                 }
                 curl_setopt_array($curl, $curlParams);
