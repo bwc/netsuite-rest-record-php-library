@@ -144,11 +144,11 @@ class RequestAbstract
                 }
                 if ($response) {
                     $json = json_decode($response, true);
-                    if (isset($json['status']) && !$this->_isHttpOk($json['status'])) {
+                    if (isset($json['status']) && is_numeric($json['status']) && !$this->_isHttpOk($json['status'])) {
                         usleep(100 * $i);
                         throw new NetsuiteException(
                             sprintf(
-                                "[HTTP:] NS Request Failed, tries: %d, method: %s, path: %s, json: %s",
+                                "[HTTP:%d] NS Request Failed, tries: %d, method: %s, path: %s, json: %s",
                                 $json['status'],
                                 $tries,
                                 $method,
