@@ -157,9 +157,7 @@ class RequestAbstract
             } catch (NetsuiteException $e) {
                 $isUserError = isset($json['o:errorDetails'][0]['o:errorCode'])
                     && $json['o:errorDetails'][0]['o:errorCode'] === 'USER_ERROR';
-                if ($isUserError) {
-                    throw new Fishpond_Exception_InvalidUserParameter($e->getMessage());
-                } else if ($i === 2) {
+                if ($isUserError || $i === 2) {
                     throw $e;
                 } else {
                     continue;
