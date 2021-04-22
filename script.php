@@ -42,7 +42,7 @@ class Index
         echo sprintf("[2/4] Loading Record Definitions...\n");
         $recordDefinitionsParser = new RecordDefinitionsParser($domXPath);
 
-        echo sprintf("[3/4] Loading Record Definitions...\n");
+        echo sprintf("[3/4] Loading Record Schema...\n");
         $recordSchemaParser = new RecordSchemaParser($domXPath);
 
         echo sprintf("[4/4] Generating php classes...\n");

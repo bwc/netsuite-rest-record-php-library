@@ -2,60 +2,6 @@
 class NSRecord_Charge extends RequestAbstract
 {
    /**
-    * [charge]
-    * 
-    *
-    * @var array
-    */
-    public static $schema = [
-        'amount',                  // float
-        'billDate',                // string
-        'billTo',                  // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'billingAccount',          // BillingAccount
-        'billingItem',             // InventoryItem|ServiceItem|OtherChargeItem|AssemblyItem|KitItem|NsResource|DiscountItem|MarkupItem|SubtotalItem|DescriptionItem|PaymentItem|SalesTaxItem|TaxGroup|ShipItem|DownloadItem|GiftCertificateItem|SubscriptionPlan|NonInventorySaleItem|NonInventoryResaleItem|NonInventoryPurchaseItem
-        'billingMode',             // string enum(IN_ARREARS, IN_ADVANCE, IMMEDIATE)
-        'billingSchedule',         // BillingSchedule
-        'chargeDate',              // string
-        'chargeEmployee',          // Employee
-        'chargeType',              // NsResource
-        'class',                   // Classification
-        'createdDate',             // string
-        'creditMemo',              // NsResource
-        'creditMemoLine',          // string
-        'currency',                // Currency
-        'customForm',              // string enum(-10916, -10915, -10914, -20961, -10230, -893, -892, -410, -891, -770)
-        'department',              // Department
-        'description',             // string
-        'externalId',              // string
-        'groupOrder',              // int
-        'id',                      // string
-        'invoice',                 // NsResource
-        'invoiceLine',             // string
-        'lastModifiedDate',        // string
-        'links',                   // NsLink, [read_only]
-        'location',                // Location
-        'memo',                    // string
-        'projectTask',             // ProjectTask
-        'quantity',                // float
-        'rate',                    // float
-        'refName',                 // string, [read_only]
-        'rule',                    // ChargeRule
-        'runId',                   // string
-        'salesOrder',              // NsResource
-        'salesOrderLine',          // string
-        'serviceEndDate',          // string
-        'serviceStartDate',        // string
-        'stage',                   // string enum(NON_BILLABLE, READY_FOR_BILLING, HOLD_FOR_BILLING, BILLED)
-        'subscriptionLine',        // SubscriptionLine
-        'subsidiary',              // Subsidiary
-        'timeRecord',              // TimeBill
-        'transaction',             // NsResource
-        'transactionLine',         // string
-        'units',                   // string
-        'use',                     // string enum(Forecast, Actual)
-    ];    
-
-   /**
     * GET /charge
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -66,23 +12,16 @@ class NSRecord_Charge extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/charge";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -97,23 +36,16 @@ class NSRecord_Charge extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/charge";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -126,9 +58,7 @@ class NSRecord_Charge extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/charge/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -141,17 +71,14 @@ class NSRecord_Charge extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/charge/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -167,23 +94,16 @@ class NSRecord_Charge extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/charge/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -199,22 +119,15 @@ class NSRecord_Charge extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/charge/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

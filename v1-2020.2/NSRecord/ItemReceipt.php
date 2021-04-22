@@ -2,58 +2,6 @@
 class NSRecord_ItemReceipt extends RequestAbstract
 {
    /**
-    * [itemReceipt]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'accountingBookDetail',    // ItemReceiptAccountingBookDetailCollection
-        'class',                   // Classification
-        'createdDate',             // string
-        'createdFrom',             // NsResource
-        'currency',                // Currency
-        'currencyName',            // string
-        'currencyPrecision',       // int
-        'currencysymbol',          // string
-        'customForm',              // string enum(88, 89, -9960, 90, 91, -9965, 92, -9966, 93, -9967)
-        'department',              // Department
-        'employee',                // Employee
-        'entity',                  // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'entityfieldname',         // string
-        'exchangeRate',            // float
-        'excludeFromGLNumbering',  // bool
-        'externalId',              // string
-        'icto',                    // string
-        'id',                      // string
-        'inboundShipment',         // InboundShipment
-        'inboundShipmentValue',    // int
-        'incoterm',                // NsResource
-        'isAdvBill',               // bool
-        'isTransforming',          // bool
-        'item',                    // ItemReceiptItemCollection
-        'landedCostMethod',        // string enum(WEIGHT, QUANTITY, VALUE)
-        'landedCostPerLine',       // bool
-        'lastModifiedDate',        // string
-        'links',                   // NsLink, [read_only]
-        'location',                // Location
-        'memo',                    // string
-        'orderId',                 // int
-        'orderType',               // string
-        'originatingSubsidiary',   // Subsidiary
-        'partner',                 // Partner
-        'postingPeriod',           // AccountingPeriod
-        'prevDate',                // string
-        'refName',                 // string, [read_only]
-        'subsidiary',              // Subsidiary
-        'taxPeriod',               // TaxPeriod
-        'tranDate',                // string
-        'tranId',                  // string
-        'transferlocation',        // Location
-        'updatecurrency',          // string
-    ];    
-
-   /**
     * GET /itemReceipt
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -64,23 +12,16 @@ class NSRecord_ItemReceipt extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/itemReceipt";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -95,23 +36,16 @@ class NSRecord_ItemReceipt extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/itemReceipt";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -124,9 +58,7 @@ class NSRecord_ItemReceipt extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/itemReceipt/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -139,17 +71,14 @@ class NSRecord_ItemReceipt extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/itemReceipt/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -165,23 +94,16 @@ class NSRecord_ItemReceipt extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/itemReceipt/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -197,22 +119,15 @@ class NSRecord_ItemReceipt extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/itemReceipt/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

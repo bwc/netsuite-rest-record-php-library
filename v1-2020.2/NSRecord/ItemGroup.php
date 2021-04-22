@@ -2,52 +2,6 @@
 class NSRecord_ItemGroup extends RequestAbstract
 {
    /**
-    * [itemGroup]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'availableToPartners',     // bool
-        'class',                   // Classification
-        'createdDate',             // string
-        'customForm',              // string enum(-10916, -10915, -10914, -20961, -10230, -893, -892, -410, -891, -770)
-        'defaultItemShipMethod',   // ShipItem
-        'department',              // Department
-        'description',             // string
-        'displayName',             // string
-        'externalId',              // string
-        'hierarchyversions',       // ItemGroupHierarchyversionsCollection
-        'id',                      // string
-        'includeChildren',         // bool
-        'includeStartEndLines',    // bool
-        'invt_DispName',           // string
-        'invt_SalesDesc',          // string
-        'isInactive',              // bool
-        'isVsoeBundle',            // bool
-        'issueProduct',            // IssueProduct
-        'itemCarrier',             // string enum(ups, nonups)
-        'itemId',                  // string
-        'itemShipMethod',          // ShipItemCollection
-        'itemType',                // string enum(Group, Discount, Description, EndGroup, GiftCert, Subtotal, Service, ShipItem, InvtPart, TaxItem)
-        'lastModifiedDate',        // string
-        'links',                   // NsLink, [read_only]
-        'location',                // Location
-        'member',                  // ItemGroupMemberCollection
-        'parent',                  // ItemGroup
-        'pf',                      // string
-        'pi',                      // string
-        'pr',                      // string
-        'printItems',              // bool
-        'refName',                 // string, [read_only]
-        'subsidiary',              // SubsidiaryCollection
-        'translations',            // ItemGroupTranslationsCollection
-        'upcCode',                 // string
-        'userNotes',               // ItemGroupUserNotesCollection
-        'vendorName',              // string
-    ];    
-
-   /**
     * GET /itemGroup
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -58,23 +12,16 @@ class NSRecord_ItemGroup extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/itemGroup";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -89,23 +36,16 @@ class NSRecord_ItemGroup extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/itemGroup";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -118,9 +58,7 @@ class NSRecord_ItemGroup extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/itemGroup/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -133,17 +71,14 @@ class NSRecord_ItemGroup extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/itemGroup/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -159,23 +94,16 @@ class NSRecord_ItemGroup extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/itemGroup/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -191,22 +119,15 @@ class NSRecord_ItemGroup extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/itemGroup/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

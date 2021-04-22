@@ -2,50 +2,6 @@
 class NSRecord_ItemLocationConfiguration extends RequestAbstract
 {
    /**
-    * [itemLocationConfiguration]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'atpleadtime',             // int
-        'backwardConsumptionDays', // int
-        'customForm',              // string enum(-10916, -10915, -10914, -20961, -10230, -893, -892, -410, -891, -770)
-        'defaultreturncost',       // float
-        'demandSource',            // string enum(FORECASTANDORDERS, EXISTINGORDERSANDDEPENDENTDEMAND, FORECASTCONSUMPTION, ITEMDEMANDPLAN)
-        'demandTimeFence',         // int
-        'externalId',              // string
-        'fixedLotSize',            // float
-        'forwardConsumptionDays',  // int
-        'id',                      // string
-        'invtClassification',      // string enum(1, 2, 3)
-        'invtCountInterval',       // int
-        'isAutoLocAssignmentAllowed',// bool
-        'isAutoLocAssignmentSuspended',// bool
-        'item',                    // InventoryItem|ServiceItem|OtherChargeItem|AssemblyItem|KitItem|NsResource|DiscountItem|MarkupItem|SubtotalItem|DescriptionItem|PaymentItem|SalesTaxItem|TaxGroup|ShipItem|DownloadItem|GiftCertificateItem|SubscriptionPlan|NonInventorySaleItem|NonInventoryResaleItem|NonInventoryPurchaseItem
-        'latePeriodDays',          // int
-        'links',                   // NsLink, [read_only]
-        'location',                // Location
-        'locationallowstorepickup',// bool
-        'locationstorepickupbufferstock',// float
-        'memo',                    // string
-        'name',                    // string
-        'nextInvtCountDate',       // string
-        'periodicLotSizeDays',     // int
-        'periodicLotSizeType',     // string enum(INTERVAL, WEEKLY, MONTHLY)
-        'preferredStockLevel',     // float
-        'refName',                 // string, [read_only]
-        'reorderPoint',            // float
-        'rescheduleHorizon',       // int
-        'rescheduleInDays',        // int
-        'rescheduleOutDays',       // int
-        'subsidiary',              // Subsidiary
-        'supplyLotSizingMethod',   // string enum(FIXED_LOT_SIZE, LOT_FOR_LOT, PERIODIC_LOT_SIZE)
-        'supplyTimeFence',         // int
-        'supplyType',              // string enum(TRANSFER, BUILD, PURCHASE)
-    ];    
-
-   /**
     * GET /itemLocationConfiguration
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -56,23 +12,16 @@ class NSRecord_ItemLocationConfiguration extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/itemLocationConfiguration";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -87,23 +36,16 @@ class NSRecord_ItemLocationConfiguration extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/itemLocationConfiguration";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -116,9 +58,7 @@ class NSRecord_ItemLocationConfiguration extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/itemLocationConfiguration/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -131,17 +71,14 @@ class NSRecord_ItemLocationConfiguration extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/itemLocationConfiguration/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -157,23 +94,16 @@ class NSRecord_ItemLocationConfiguration extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/itemLocationConfiguration/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -189,22 +119,15 @@ class NSRecord_ItemLocationConfiguration extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/itemLocationConfiguration/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

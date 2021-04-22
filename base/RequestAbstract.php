@@ -11,11 +11,6 @@ class RequestAbstract
     /**
      * @var array
      */
-    public static $schema = [];
-
-    /**
-     * @var array
-     */
     private static $_config = [];
 
     /**
@@ -38,34 +33,44 @@ class RequestAbstract
     /**
      * @param string $method
      * @param string $path
+     * @param array $params
      * @param string $body
      * @param int $tries
      * @param array $additionalHeaders
      * @return stdClass
      * @throws NetsuiteException
      */
-    protected function _makeRequest($method, $path, $body = null, $additionalHeaders = [], $tries = 3)
+    protected function _makeRequest($method, $path, $params = [], $body = '', $additionalHeaders = [], $tries = 3)
     {
         for ($i = 0; $i < $tries; $i++) {
             try {
                 $generatedParams = $this->_generateParams();
+                $signatureParams = array_merge(
+                    $params,
+                    [
+                        'oauth_consumer_key'        => rawurlencode(self::$_config['consumer_key']),
+                        'oauth_nonce'               => rawurlencode($generatedParams['nonce']),
+                        'oauth_signature_method'    => rawurlencode(self::SIGNATURE_METHOD),
+                        'oauth_timestamp'           => rawurlencode($generatedParams['time']),
+                        'oauth_token'               => rawurlencode(self::$_config['token_id']),
+                        'oauth_version'             => self::RECORD_API_VERSION
+                    ]
+                );
+                ksort($signatureParams);
                 $baseString = sprintf(
                     '%s&%s&%s',
                     $method,
                     rawurlencode($this->_baseurl . $path),
                     rawurlencode(
-                        sprintf(
-                            'oauth_consumer_key=%s&oauth_nonce=%s&oauth_signature_method=%s'
-                            . '&oauth_timestamp=%s&oauth_token=%s&oauth_version=%s',
-                            rawurlencode(self::$_config['consumer_key']),
-                            rawurlencode($generatedParams['nonce']),
-                            rawurlencode(self::SIGNATURE_METHOD),
-                            rawurlencode($generatedParams['time']),
-                            rawurlencode(self::$_config['token_id']),
-                            rawurlencode(self::RECORD_API_VERSION)
+                        http_build_query(
+                            $signatureParams,
+                            '',
+                            '&',
+                            PHP_QUERY_RFC3986
                         )
                     )
                 );
+
                 $key = sprintf(
                     '%s&%s',
                     rawurlencode(self::$_config['consumer_secret']),
@@ -101,23 +106,27 @@ class RequestAbstract
                 }
 
                 $curl = curl_init();
+                $url = $this->_baseurl . $path;
+                if ($method === 'GET' && $params) {
+                    $url .= '?' . http_build_query($params);
+                }
+
                 $curlParams = [
-                    CURLOPT_URL => $this->_baseurl . $path,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => $method,
-                    CURLOPT_HTTPHEADER => $header,
+                    CURLOPT_URL             => $url,
+                    CURLOPT_RETURNTRANSFER  => true,
+                    CURLOPT_ENCODING        => "",
+                    CURLOPT_MAXREDIRS       => 10,
+                    CURLOPT_TIMEOUT         => 0,
+                    CURLOPT_FOLLOWLOCATION  => true,
+                    CURLOPT_HTTP_VERSION    => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST   => $method,
+                    CURLOPT_HTTPHEADER      => $header,
                 ];
                 if ($body) {
                     $curlParams[CURLOPT_POSTFIELDS] = $body;
                 }
                 curl_setopt_array($curl, $curlParams);
                 $response = curl_exec($curl);
-                $json = json_decode($response, true);
                 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                 curl_close($curl);
 
@@ -134,11 +143,12 @@ class RequestAbstract
                     );
                 }
                 if ($response) {
+                    $json = json_decode($response, true);
                     if (isset($json['status']) && !$this->_isHttpOk($json['status'])) {
                         usleep(100 * $i);
                         throw new NetsuiteException(
                             sprintf(
-                                "[HTTP:]NS Request Failed, tries: %d, method: %s, path: %s, json: %s",
+                                "[HTTP:] NS Request Failed, tries: %d, method: %s, path: %s, json: %s",
                                 $json['status'],
                                 $tries,
                                 $method,
@@ -193,18 +203,29 @@ class RequestAbstract
     }
 
     /**
-     * @return array
-     */
-    public function getSchema()
-    {
-        return static::$schema;
-    }
-
-    /**
      * @param stdClass $config
      */
     public function setConfig($config)
     {
         self::$_config = $config;
+    }
+
+    /**
+     * Returns non empty args as an alphabetically sorted array
+     *
+     * @param array $args
+     * @return array
+     */
+    protected function _argsToHttpParams($args)
+    {
+        $params = [];
+        foreach ($args as $name => $value) {
+            if ($value !== null) {
+                $params[$name] = $value;
+            }
+        }
+        ksort($params);
+
+        return $params;
     }
 }

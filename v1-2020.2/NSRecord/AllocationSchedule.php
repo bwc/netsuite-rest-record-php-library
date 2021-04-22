@@ -2,55 +2,6 @@
 class NSRecord_AllocationSchedule extends RequestAbstract
 {
    /**
-    * [allocationSchedule]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'accountingbook',          // AccountingBook
-        'accountsfromsource',      // bool
-        'allocationDetails',       // AllocationScheduleAllocationDetailsCollection
-        'allocationdestination',   // AllocationScheduleAllocationdestinationCollection
-        'allocationmode',          // string enum(FIXED, DYNAMIC)
-        'allocationsource',        // AllocationScheduleAllocationsourceCollection
-        'batchfrequency',          // string
-        'conversionrate',          // int
-        'createdjournals',         // JournalEntryCollection
-        'creditaccount',           // Account
-        'creditclass',             // Classification
-        'creditdepartment',        // Department
-        'creditentity',            // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'creditlocation',          // Location
-        'datebasis',               // string enum(AOD, YTD, QTD, PTD)
-        'externalId',              // string
-        'frequency',               // string
-        'id',                      // string
-        'inactive',                // bool
-        'isdetail',                // bool
-        'journaldocid',            // int
-        'journaldocsnum',          // string
-        'links',                   // NsLink, [read_only]
-        'name',                    // string
-        'nextdate',                // string
-        'parentschedule',          // AllocationSchedule
-        'postingperiod',           // AccountingPeriod
-        'refName',                 // string, [read_only]
-        'remainingreminders',      // string
-        'remindforever',           // bool
-        'srcbasecurrency',         // Currency
-        'subsequentdate',          // string
-        'subsidiary',              // Subsidiary
-        'suffix',                  // string
-        'trandate',                // string
-        'unit',                    // string
-        'unitlabel',               // string
-        'unitstype',               // string
-        'weightsinpercentage',     // bool
-        'weightsource',            // Account
-    ];    
-
-   /**
     * POST /allocationSchedule
     * 
     * @param $body {allocationSchedule}
@@ -62,23 +13,16 @@ class NSRecord_AllocationSchedule extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/allocationSchedule";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -91,9 +35,7 @@ class NSRecord_AllocationSchedule extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/allocationSchedule/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -106,17 +48,14 @@ class NSRecord_AllocationSchedule extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/allocationSchedule/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -132,23 +71,16 @@ class NSRecord_AllocationSchedule extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/allocationSchedule/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -164,22 +96,15 @@ class NSRecord_AllocationSchedule extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/allocationSchedule/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

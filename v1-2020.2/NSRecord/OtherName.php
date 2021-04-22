@@ -2,91 +2,6 @@
 class NSRecord_OtherName extends RequestAbstract
 {
    /**
-    * [otherName]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'accountNumber',           // string
-        'addressBook',             // OtherNameAddressBookCollection
-        'altEmail',                // string
-        'altName',                 // string
-        'autoName',                // bool
-        'balance',                 // float
-        'bcn',                     // string
-        'bulkMerge',               // OtherNameBulkMergeCollection
-        'campaigns',               // OtherNameCampaignsCollection
-        'category',                // OtherNameCategory
-        'comments',                // string
-        'companyName',             // string
-        'contact',                 // Contact
-        'contactList',             // ContactCollection
-        'creditLimit',             // float
-        'currency',                // Currency
-        'dateCreated',             // string
-        'defaultAddress',          // string
-        'defaultBillingAddress',   // string
-        'defaultShippingAddress',  // string
-        'defaultTaxReg',           // string
-        'defaultTaxRegOptions',    // string
-        'edition',                 // string enum(XX, AU, UK, JP, US, CA)
-        'email',                   // string
-        'emailPreference',         // string enum(PDF, HTML, DEFAULT)
-        'emailVal',                // string
-        'entityId',                // string
-        'entityNumber',            // int
-        'entityStatus',            // string
-        'entityTitle',             // string
-        'externalId',              // string
-        'fax',                     // string
-        'firstName',               // string
-        'globalSubscriptionStatus',// string enum(1, 2, 3, 4)
-        'glommedName',             // string
-        'hasShippingAddress',      // bool
-        'homePhone',               // string
-        'id',                      // string
-        'image',                   // NsResource
-        'isInactive',              // bool
-        'isIndividual',            // bool
-        'isPerson',                // bool
-        'lastModifiedDate',        // string
-        'lastName',                // string
-        'links',                   // NsLink, [read_only]
-        'middleName',              // string
-        'mobilePhone',             // string
-        'openingbalance',          // float
-        'openingbalanceaccount',   // Account
-        'openingbalancedate',      // string
-        'phone',                   // string
-        'phoneticName',            // string
-        'printOnCheckAs',          // string
-        'refName',                 // string, [read_only]
-        'salutation',              // string
-        'shipAddr1',               // string
-        'shipAddr2',               // string
-        'shipAddr3',               // string
-        'shipAddressee',           // string
-        'shipAttention',           // string
-        'shipCity',                // string
-        'shipCountry',             // string
-        'shipState',               // string
-        'shipZip',                 // string
-        'shipping_country',        // string enum(PR, PS, PT, PW, PY, QA, AD, AE, AF, AG)
-        'subscriptionMessageHistory',// OtherNameSubscriptionMessageHistoryCollection
-        'subscriptions',           // OtherNameSubscriptionsCollection
-        'subsidiary',              // Subsidiary
-        'taxFractionUnit',         // string enum(2, 1, 0, -1, -2)
-        'taxIdNum',                // string
-        'taxRegistration',         // OtherNameTaxRegistrationCollection
-        'taxRounding',             // string enum(DOWN, UP, OFF)
-        'terms',                   // Term
-        'title',                   // string
-        'url',                     // string
-        'vatRegNumber',            // string
-    ];    
-
-   /**
     * GET /otherName
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -97,23 +12,16 @@ class NSRecord_OtherName extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/otherName";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -128,23 +36,16 @@ class NSRecord_OtherName extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/otherName";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -157,9 +58,7 @@ class NSRecord_OtherName extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/otherName/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -172,17 +71,14 @@ class NSRecord_OtherName extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/otherName/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -198,23 +94,16 @@ class NSRecord_OtherName extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/otherName/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -230,22 +119,15 @@ class NSRecord_OtherName extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/otherName/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

@@ -2,58 +2,6 @@
 class NSRecord_RevenueArrangement extends RequestAbstract
 {
    /**
-    * [revenueArrangement]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'accountingBook',          // AccountingBook
-        'approvalStatus',          // string enum(11, 12, 13, 14, 15, 16, 17, 18, 19, 1)
-        'arrangementMessage',      // RevenueArrangementArrangementMessageCollection
-        'class',                   // Classification
-        'compliant',               // bool
-        'contRevHandlingTriggered',// bool
-        'contingentForBook',       // bool
-        'contractCostAccrualDate', // string
-        'contractCostAmount',      // float
-        'contractDeferredExpenseAcct',// Account
-        'contractExpenseAcct',     // Account
-        'contractExpenseSourceAcct',// Account
-        'contractcostamountexists',// string
-        'contractexpenseplancreated',// string
-        'createdDate',             // string
-        'createdfrommergedarrangements',// bool
-        'currency',                // Currency
-        'currencyPrecision',       // int
-        'currentchangeorderarrangement',// string
-        'customForm',              // string enum(88, 89, -9960, 90, 91, -9965, 92, -9966, 93, -9967)
-        'deferredCostJournalEntry',// JournalEntryCollection
-        'department',              // Department
-        'entity',                  // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'externalId',              // string
-        'id',                      // string
-        'lastModifiedDate',        // string
-        'links',                   // NsLink, [read_only]
-        'location',                // Location
-        'memo',                    // string
-        'mergedintonewarrangements',// bool
-        'nextApprover',            // Employee
-        'oldchangeorderarrangement',// string
-        'prevDate',                // string
-        'refName',                 // string, [read_only]
-        'revenueElement',          // RevenueArrangementRevenueElementCollection
-        'revenueplanstatus',       // string enum(COMPLETED, ONHOLD, NOTSTARTED, PLANFAILED, INPROGRESS)
-        'subsidiary',              // Subsidiary
-        'totalAllocationAmount',   // float
-        'totalRevenueAmount',      // float
-        'totalSellingAmount',      // float
-        'tranDate',                // string
-        'tranId',                  // string
-        'tranIsVsoeBundle',        // bool
-    ];    
-
-   /**
     * GET /revenueArrangement
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -64,23 +12,16 @@ class NSRecord_RevenueArrangement extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/revenueArrangement";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -95,23 +36,16 @@ class NSRecord_RevenueArrangement extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/revenueArrangement";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -124,9 +58,7 @@ class NSRecord_RevenueArrangement extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/revenueArrangement/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -139,17 +71,14 @@ class NSRecord_RevenueArrangement extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/revenueArrangement/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -165,23 +94,16 @@ class NSRecord_RevenueArrangement extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/revenueArrangement/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -197,22 +119,15 @@ class NSRecord_RevenueArrangement extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/revenueArrangement/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

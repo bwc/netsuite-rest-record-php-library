@@ -2,66 +2,6 @@
 class NSRecord_ProjectTemplate extends RequestAbstract
 {
    /**
-    * [projectTemplate]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'allowAllResourcesForTasks',// bool
-        'allowExpenses',           // bool
-        'allowTaskTimeForRsrcAlloc',// bool
-        'allowTime',               // bool
-        'applyProjectExpenseTypeToAll',// bool
-        'bBudgetShowCalculatedLines',// bool
-        'bBudgetUseCalculatedValues',// bool
-        'billingRateCard',         // BillingRateCard
-        'billingSchedule',         // BillingSchedule
-        'cBudgetLaborBudgetFromAlloc',// bool
-        'cBudgetShowCalculatedLines',// bool
-        'cBudgetUseCalculatedValues',// bool
-        'calculatedWork',          // string
-        'createChargeRule',        // bool
-        'customForm',              // string enum(-10916, -10915, -10914, -20961, -10230, -893, -892, -410, -891, -770)
-        'entityId',                // string
-        'estimatedCost',           // float
-        'estimatedCostJc',         // float
-        'estimatedGrossProfit',    // float
-        'estimatedGrossProfitPercent',// float
-        'estimatedLaborCost',      // float
-        'estimatedLaborRevenue',   // float
-        'estimatedRevenue',        // float
-        'estimatedRevenueJc',      // float
-        'estimatedTimeOverride',   // string
-        'externalId',              // string
-        'forecastChargeRunOnDemand',// bool
-        'id',                      // string
-        'includeCrmTasksInTotals', // bool
-        'isExemptTime',            // bool
-        'isInactive',              // bool
-        'isProductiveTime',        // bool
-        'isUtilizedTime',          // bool
-        'jobBillingType',          // string enum(FBM, STD, TM, FBI, CB)
-        'jobItem',                 // ServiceItem
-        'jobPrice',                // float
-        'jobResources',            // ProjectTemplateJobResourcesCollection
-        'limitTimeToAssignees',    // bool
-        'links',                   // NsLink, [read_only]
-        'materializeTime',         // bool
-        'plannedWork',             // string
-        'projectExpenseType',      // ProjectExpenseType
-        'projectFormTemplate',     // string enum(-10916, -10915, -10914, -20961, -10230, -893, -892, -410, -891, -770)
-        'projectManager',          // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'refName',                 // string, [read_only]
-        'scheduledenddate',        // string
-        'schedulingMethod',        // string enum(BACKWARD, FORWARD)
-        'sourceServiceItemFromRateCard',// bool
-        'startDate',               // string
-        'subsidiary',              // Subsidiary
-        'useAllocatedTimeForForecast',// bool
-    ];    
-
-   /**
     * GET /projectTemplate
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -72,23 +12,16 @@ class NSRecord_ProjectTemplate extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/projectTemplate";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -103,23 +36,16 @@ class NSRecord_ProjectTemplate extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/projectTemplate";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -132,9 +58,7 @@ class NSRecord_ProjectTemplate extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/projectTemplate/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -147,17 +71,14 @@ class NSRecord_ProjectTemplate extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/projectTemplate/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -173,23 +94,16 @@ class NSRecord_ProjectTemplate extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/projectTemplate/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -205,22 +119,15 @@ class NSRecord_ProjectTemplate extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/projectTemplate/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

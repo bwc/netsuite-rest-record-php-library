@@ -2,71 +2,6 @@
 class NSRecord_Location extends RequestAbstract
 {
    /**
-    * [location]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'allowstorepickup',        // bool
-        'autoassignmentregionsetting',// string enum(0, 1, 2, 3)
-        'bufferstock',             // int
-        'businesshours',           // LocationBusinesshoursCollection
-        'canshipfromlocation',     // bool
-        'classtranslation',        // LocationClasstranslationCollection
-        'cutOffTimeZone',          // string
-        'dailyshippingcapacity',   // int
-        'defaultallocationpriority',// float
-        'docNumbering',            // LocationDocNumberingCollection
-        'excludelocationregions',  // LocationExcludelocationregionsCollection
-        'externalId',              // string
-        'fullName',                // string
-        'geolocationmethod',       // string enum(POSTALCODE, LATLONG)
-        'hasbins',                 // bool
-        'hasopensalesorders',      // string
-        'hastransactions',         // bool
-        'id',                      // string
-        'includechildren',         // bool
-        'includeincontroltower',   // bool
-        'includeinsupplyplanning', // bool
-        'includelocationregions',  // LocationIncludelocationregionsCollection
-        'internalId',              // int
-        'invtturnovervelocity',    // int
-        'isInactive',              // bool
-        'lastModifiedDate',        // string
-        'latitude',                // float
-        'links',                   // NsLink, [read_only]
-        'locationtype',            // string enum(1, 2)
-        'logo',                    // NsResource
-        'longitude',               // float
-        'mainAddress',             // LocationMainAddress
-        'makeinventoryavailable',  // bool
-        'makeinventoryavailablestore',// bool
-        'name',                    // string
-        'nextpickupcutofftime',    // string
-        'parent',                  // Location
-        'pickupalertemail',        // string
-        'refName',                 // string, [read_only]
-        'returnAddress',           // LocationReturnAddress
-        'samedayshipcutoff',       // string
-        'samedayshipcutoff_picker',// string enum(2020-10-12 01:00:00, 2020-10-12 00:30:00, 2020-10-12 08:00:00, 2020-10-12 16:00:00, 2020-10-12 21:00:00, 2020-10-12 11:00:00, 2020-10-12 18:00:00, 2020-10-12 03:00:00, 2020-10-12 06:00:00, 2020-10-12 20:30:00)
-        'sopredconfidence',        // float
-        'sopredicteddays',         // int
-        'storefulfillmentmemo',    // string
-        'storepickupbufferstock',  // float
-        'subsidiary',              // SubsidiaryCollection
-        'timezone',                // string enum(America/Sao_Paulo, Asia/Vladivostok, Africa/Nairobi, Asia/Hong_Kong, Asia/Riyadh, Pacific/Kwajalein, America/Montevideo, Africa/Cairo, Africa/Windhoek, Europe/Moscow)
-        'topredconfidence',        // float
-        'topredicteddays',         // int
-        'totalshippingcapacity',   // int
-        'tranInternalPrefix',      // string
-        'tranNumbering',           // LocationTranNumberingCollection
-        'tranPrefix',              // string
-        'usebins',                 // bool
-        'usewarehousemanagement',  // bool
-    ];    
-
-   /**
     * GET /location
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -77,23 +12,16 @@ class NSRecord_Location extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/location";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -108,23 +36,16 @@ class NSRecord_Location extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/location";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -137,9 +58,7 @@ class NSRecord_Location extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/location/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -152,17 +71,14 @@ class NSRecord_Location extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/location/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -178,23 +94,16 @@ class NSRecord_Location extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/location/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -210,22 +119,15 @@ class NSRecord_Location extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/location/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

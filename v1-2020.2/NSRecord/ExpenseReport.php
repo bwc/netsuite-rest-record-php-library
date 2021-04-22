@@ -2,99 +2,6 @@
 class NSRecord_ExpenseReport extends RequestAbstract
 {
    /**
-    * [expenseReport]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'account',                 // Account
-        'accountingBookDetail',    // ExpenseReportAccountingBookDetailCollection
-        'accountingapproval',      // bool
-        'acctcorpcardexp',         // Account
-        'advance',                 // float
-        'advance2',                // float
-        'advanceaccount',          // Account
-        'amount',                  // float
-        'approvalStatus',          // string enum(11, 12, 13, 14, 15, 16, 17, 18, 19, 1)
-        'class',                   // Classification
-        'complete',                // bool
-        'corporatecard',           // float
-        'createdDate',             // string
-        'currencyPrecision',       // string
-        'customForm',              // string enum(88, 89, -9960, 90, 91, -9965, 92, -9966, 93, -9967)
-        'department',              // Department
-        'duedate',                 // string
-        'entity',                  // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'entityNexus',             // Nexus
-        'entity_nexus_country',    // string
-        'excludeFromGLNumbering',  // bool
-        'expense',                 // ExpenseReportExpenseCollection
-        'expensereportcurrency',   // Currency
-        'expensereportexchangerate',// float
-        'externalId',              // string
-        'id',                      // string
-        'lastModifiedDate',        // string
-        'legacyTax',               // bool
-        'links',                   // NsLink, [read_only]
-        'location',                // Location
-        'memo',                    // string
-        'nextApprover',            // Employee
-        'nexus',                   // Nexus
-        'nexusOverride',           // Nexus
-        'nexus_country',           // string
-        'nonreimbursable',         // float
-        'originalNexus',           // Nexus
-        'originalNexusCountry',    // string
-        'payments',                // string
-        'policyviolated',          // bool
-        'postingPeriod',           // AccountingPeriod
-        'prevDate',                // string
-        'refName',                 // string, [read_only]
-        'reimbursable',            // float
-        'rejected',                // bool
-        'status',                  // string enum(A, B, C, D, E, V, F, G, H, Y)
-        'storedtaxoutdated',       // bool
-        'subsidiary',              // Subsidiary
-        'subsidiaryTaxRegNum',     // string
-        'supervisorapproval',      // bool
-        'tax1Amt',                 // float
-        'tax2Amt',                 // float
-        'taxAmount2Override',      // float
-        'taxAmountOverride',       // float
-        'taxCalcFailure',          // bool
-        'taxCalcNotifications',    // string
-        'taxCalculationContextAdditionalFields',// string
-        'taxCalculationContextAdditionalLineFields',// string
-        'taxCalculationContextInProgressDepth',// int
-        'taxCalculationContextNotifications',// string
-        'taxCalculationContextOriginalAdditionalFields',// string
-        'taxCalculationContextOriginalAdditionalLineFields',// string
-        'taxCalculationContextRunPaymentScript',// bool
-        'taxDetails',              // ExpenseReportTaxDetailsCollection
-        'taxDetailsOverride',      // bool
-        'taxFractionUnit',         // int
-        'taxPeriod',               // TaxPeriod
-        'taxPointDate',            // string
-        'taxPointDateOverride',    // bool
-        'taxReferenceToBeUpdated', // string
-        'taxRegOverride',          // bool
-        'taxRounding',             // string
-        'taxRoundingLevel',        // string
-        'taxSessionId',            // string
-        'taxStrategyUsed',         // string
-        'taxTotal',                // float
-        'taxTotalTemplate',        // float
-        'taxesDirty',              // bool
-        'total',                   // float
-        'totalbasecurrency',       // string
-        'tranDate',                // string
-        'tranId',                  // string
-        'usemulticurrency',        // bool
-        'warnNexusChange',         // bool
-    ];    
-
-   /**
     * GET /expenseReport
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -105,23 +12,16 @@ class NSRecord_ExpenseReport extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/expenseReport";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -136,23 +36,16 @@ class NSRecord_ExpenseReport extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/expenseReport";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -165,9 +58,7 @@ class NSRecord_ExpenseReport extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/expenseReport/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -180,17 +71,14 @@ class NSRecord_ExpenseReport extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/expenseReport/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -206,23 +94,16 @@ class NSRecord_ExpenseReport extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/expenseReport/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -238,22 +119,15 @@ class NSRecord_ExpenseReport extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/expenseReport/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

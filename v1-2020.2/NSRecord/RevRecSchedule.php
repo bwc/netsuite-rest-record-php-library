@@ -2,50 +2,6 @@
 class NSRecord_RevRecSchedule extends RequestAbstract
 {
    /**
-    * [revRecSchedule]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'accountingBook',          // AccountingBook
-        'amortizationPeriod',      // int
-        'amortizationType',        // string enum(STANDARD, VARIABLE)
-        'baseCurrencyPrecision',   // int
-        'endDate',                 // string
-        'externalId',              // string
-        'forecastTemplate',        // RevRecTemplate
-        'id',                      // string
-        'initialAmount',           // float
-        'isAmortization',          // bool
-        'isEliminate',             // bool
-        'isInactive',              // bool
-        'isRecognized',            // bool
-        'isSchedule',              // bool
-        'job',                     // Job
-        'links',                   // NsLink, [read_only]
-        'name',                    // string
-        'parentSched',             // RevRecTemplate
-        'periodOffset',            // int
-        'recogIntervalSrc',        // string enum(RECEIPTDATE, USERDEFINED, BETWEENBILLS, BETWEENBILLSRRDATE, SOREVRECDATES)
-        'recurrence',              // RevRecScheduleRecurrenceCollection
-        'recurrenceType',          // string enum(DATESPRORATE, EVENPERIODSPRORATE, CUSTOM, DATESINTOPERIODS, EVENPRORATEPERIOD)
-        'refName',                 // string, [read_only]
-        'remainingDeferredBalance',// float
-        'revRecNumber',            // string
-        'revRecOffset',            // int
-        'scheduleNumber',          // string
-        'sourceTran',              // NsResource
-        'startDate',               // string
-        'status',                  // string enum(NOTSTARTED, INPROGRESS, COMPLETED, ONHOLD)
-        'target',                  // string
-        'totalAmortized',          // float
-        'totalAmount',             // float
-        'tranLineId',              // string
-        'tranType',                // string
-    ];    
-
-   /**
     * GET /revRecSchedule
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -56,23 +12,16 @@ class NSRecord_RevRecSchedule extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/revRecSchedule";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -87,23 +36,16 @@ class NSRecord_RevRecSchedule extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/revRecSchedule";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -116,9 +58,7 @@ class NSRecord_RevRecSchedule extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/revRecSchedule/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -131,17 +71,14 @@ class NSRecord_RevRecSchedule extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/revRecSchedule/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -157,23 +94,16 @@ class NSRecord_RevRecSchedule extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/revRecSchedule/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -189,22 +119,15 @@ class NSRecord_RevRecSchedule extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/revRecSchedule/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

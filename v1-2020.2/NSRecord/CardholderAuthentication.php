@@ -2,51 +2,6 @@
 class NSRecord_CardholderAuthentication extends RequestAbstract
 {
    /**
-    * [cardholderAuthentication]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'acceptHeader',            // string
-        'amount',                  // float
-        'authenticateDeviceFormAction',// string
-        'authenticateDeviceFormId',// string
-        'authenticateDeviceInputs',// CardholderAuthenticationAuthenticateDeviceInputsCollection
-        'authenticateDeviceResults',// CardholderAuthenticationAuthenticateDeviceResultsCollection
-        'authenticationFields',    // CardholderAuthenticationAuthenticationFieldsCollection
-        'billingAddress',          // CardholderAuthenticationBillingAddress
-        'cardholderAuthenticationEvents',// CardholderAuthenticationCardholderAuthenticationEventsCollection
-        'cavv',                    // string
-        'challengeShopperFormAction',// string
-        'challengeShopperFormId',  // string
-        'challengeShopperInputs',  // CardholderAuthenticationChallengeShopperInputsCollection
-        'challengeShopperResults', // CardholderAuthenticationChallengeShopperResultsCollection
-        'challengeWindowSize',     // string enum(01, 02, 03, 04, 05)
-        'currency',                // Currency
-        'eci',                     // string enum(00, 01, 02, 05, 06, 07)
-        'entity',                  // Customer
-        'externalId',              // string
-        'handlingMode',            // string enum(MIMIC, PROCESS, SAVE_ONLY)
-        'id',                      // string
-        'ipAddress',               // string
-        'links',                   // NsLink, [read_only]
-        'notificationUrl',         // string
-        'paymentCardCsc',          // string
-        'paymentMethod',           // string
-        'paymentOption',           // NsResource
-        'paymentProcessingProfile',// NsResource
-        'refName',                 // string, [read_only]
-        'shippingAddress',         // CardholderAuthenticationShippingAddress
-        'status',                  // string enum(CANCELLED, RETURN_FROM_SHOPPER_CHALLENGE, AUTHENTICATED, NOT_REQUIRED, WAITING_FOR_DEVICE_AUTHENTICATION, WAITING_FOR_INITIAL_PROCESS, RETURN_FROM_DEVICE_AUTHENTICATION, WAITING_FOR_SHOPPER_CHALLENGE)
-        'subsidiary',              // Subsidiary
-        'threeDSTranStatusReason', // string enum(22, 01, 23, 02, 24, 03, 25, 04, 26, 05)
-        'threeDSTransactionId',    // string
-        'threeDSVersion',          // string enum(2.1.0, 2.2.0, 1.0.2)
-        'userAgent',               // string
-    ];    
-
-   /**
     * GET /cardholderAuthentication
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -57,23 +12,16 @@ class NSRecord_CardholderAuthentication extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/cardholderAuthentication";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -88,23 +36,16 @@ class NSRecord_CardholderAuthentication extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/cardholderAuthentication";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -117,9 +58,7 @@ class NSRecord_CardholderAuthentication extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/cardholderAuthentication/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -132,17 +71,14 @@ class NSRecord_CardholderAuthentication extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/cardholderAuthentication/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -158,23 +94,16 @@ class NSRecord_CardholderAuthentication extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/cardholderAuthentication/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -190,22 +119,15 @@ class NSRecord_CardholderAuthentication extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/cardholderAuthentication/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

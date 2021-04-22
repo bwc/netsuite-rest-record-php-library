@@ -7,8 +7,6 @@ class PHPGenerator
     const DOC_TYPE_TAB_SPACES = '24';
     const TEMPLATE_REQUEST_CLASS = "<?php\nclass %s extends RequestAbstract\n{\n%s}\n";
     const TEMPLATE_FUNCTION = "   /**\n    * %s\n    */\n    %s\n    {\n%s\n    }\n";
-    const SCHEMA_TEMPLATE = "   /**\n%s* [%s]\n%s* %s\n%s*\n%s* @var array\n%s*/\n%spublic static \$schema = [\n%s\n%s];%s\n";
-    const SCHEMA_LINE_TEMPLATE = "%s'%s',%s// %s%s%s%s";
 
     /**
      * @var string
@@ -39,7 +37,7 @@ class PHPGenerator
         foreach ($requests as $requestName => $request) {
             $className = Formatter::formatClassName($requestName, self::REQUEST_CLASS_PREFIX);
             $classFileName = Formatter::formatClassName($requestName);
-            $phpFunctions = [$this->_generateSchemaDefinition($requestName, $schemaData[$requestName])];
+            $phpFunctions = [];
             echo sprintf(
                 "\nGenerating Record Definition...\tRequest %d/%d - %s...\n",
                 ++$i,
@@ -102,7 +100,7 @@ class PHPGenerator
             list($param, $phpDocLine, $queryName, $functionName) = $this->_generatePhpFunctionParameter($p);
             $functionParameters[] = $param;
             $phpDocLines[] = $phpDocLine;
-            $queryParameters[] = [
+            $queryParameters[$queryName] = [
                 'query_name'    => $queryName,
                 'function_name' => $functionName,
                 'required'      => $p['required']
@@ -132,45 +130,6 @@ class PHPGenerator
                 $queryParameters,
                 $hasBodyToPost
             )
-        );
-    }
-
-    /**
-     * @param array $data
-     * @throws NetsuiteException
-     */
-    private function _generateSchemaDefinition($recordName, $data)
-    {
-        $lines = [];
-        foreach ($data['fields'] as $name => $config) {
-            $spacing = strlen($name) < self::DOC_TYPE_TAB_SPACES
-                ? str_repeat(' ', self::DOC_TYPE_TAB_SPACES - strlen($name)) : '';
-
-            $lines[] = sprintf(
-                self::SCHEMA_LINE_TEMPLATE,
-                Formatter::tab(2),
-                $name,
-                $spacing,
-                Formatter::parseTypes($config['type'], '', $config['format']),
-                $config['range'] ? ", range:{$config['range']}" : '',
-                $config['read_only'] ? ", [read_only]" : '',
-                $config['enum_items'] ? ' enum(' . implode(', ', $config['enum_items']) . ')' : ''
-            );
-        }
-
-        return sprintf(
-            self::SCHEMA_TEMPLATE,
-            Formatter::tab(),
-            $recordName,
-            Formatter::tab(),
-            $data['desc'],
-            Formatter::tab(),
-            Formatter::tab(),
-            Formatter::tab(),
-            Formatter::tab(),
-            implode("\n", $lines),
-            Formatter::tab(),
-            Formatter::tab()
         );
     }
 
@@ -221,58 +180,50 @@ class PHPGenerator
      */
     private function _generatePhpFunctionBody($path, $method, $queryParameters, $hasBodyToPost)
     {
-        $hasUrlParams = false;
         $buildPath = sprintf("\$path = \"%s\";", $path);
+        $buildVar = sprintf(
+            "\n%s\$args = \$this->_argsToHttpParams(\n%s[\n",
+            Formatter::tab(2),
+            Formatter::tab(3)
+        );
+
+        $hasArgs = false;
+        ksort($queryParameters);
         foreach ($queryParameters as $config) {
             $search = "{{$config['query_name']}}";
             if (strpos($path, $search) !== false) {
                 // DELETE /account/{id} to DELETE /account/$id
                 $buildPath = str_replace($search, $config['function_name'], $buildPath);
             } else {
-                // GET /account to /account?q=$q&limit=$limit&offset=$offset
-                if ($config['required']) {
-                    $buildPath .= sprintf(
-                        "\n%s\$parts[] = \"%s=%s\";",
-                        Formatter::tab(2),
-                        $config['query_name'],
-                        $config['function_name']
-                    );
-                    $hasUrlParams = true;
-                } else {
-                    $buildPath .= sprintf(
-                        "\n%sif (%s) {\n%s\$parts[] = '%s=' . urlencode((string)%s);\n%s}",
-                        Formatter::tab(2),
-                        $config['function_name'],
-                        Formatter::tab(3),
-                        $config['query_name'],
-                        $config['function_name'],
-                        Formatter::tab(2)
-                    );
-                    $hasUrlParams = true;
-                }
+                $buildVar .= sprintf(
+                    "%s'%s' => %s,\n",
+                    Formatter::tab(4),
+                    $config['query_name'],
+                    $config['function_name']
+                );
+                $hasArgs = true;
             }
         }
-
-        if ($hasUrlParams) {
-            $buildPath = "\$parts = [];\n" . Formatter::tab(2) . $buildPath;
-            $buildPath .= sprintf(
-                "\n%sif (\$parts) {\n%s\$path .= '?' . implode('&', \$parts);\n%s}",
-                Formatter::tab(2),
-                Formatter::tab(3),
-                Formatter::tab(2)
-            );
+        $buildVar .= sprintf(
+            "%s]\n%s);\n",
+            Formatter::tab(3),
+            Formatter::tab(2),
+            Formatter::tab(2),
+            $method
+        );
+        if ($hasArgs) {
+            $buildPath .= $buildVar;
         }
 
-        $body = sprintf(
-            "%s%s\n%s\$response = \$this->_makeRequest('%s', \$path%s);\n\n%sreturn \$response;",
+        return sprintf(
+            "%s%s\n%sreturn \$this->_makeRequest('%s', \$path, %s%s);",
             Formatter::tab(2),
             $buildPath,
             Formatter::tab(2),
             $method,
-            $hasBodyToPost ? ', $body' : '',
-            Formatter::tab(2)
+            $hasArgs ? '$args' : '[]',
+            $hasBodyToPost ? ', $body' : ''
         );
 
-        return $body;
     }
 }

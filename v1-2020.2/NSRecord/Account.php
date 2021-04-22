@@ -2,67 +2,6 @@
 class NSRecord_Account extends RequestAbstract
 {
    /**
-    * [account]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'Bai2Record02',            // string
-        'Bai2Record03',            // string
-        'accountContextSearch',    // AccountAccountContextSearchCollection
-        'accountSearchDisplayName',// string
-        'accountSearchDisplayNameCopy',// string
-        'acctname',                // string
-        'acctnumber',              // string
-        'accttype',                // string
-        'availableBalance',        // float
-        'bach',                    // bool
-        'balance',                 // float
-        'billableexpensesacct',    // Account
-        'cashflowrate',            // string enum(AVERAGE, HISTORICAL, CURRENT)
-        'category1099misc',        // NsResource
-        'class',                   // Classification
-        'curDocNum',               // int
-        'currency',                // Currency
-        'deferralacct',            // Account
-        'department',              // Department
-        'description',             // string
-        'displayNameWithHierarchy',// string
-        'eliminate',               // bool
-        'externalId',              // string
-        'fullName',                // string
-        'generalrate',             // string enum(AVERAGE, HISTORICAL, CURRENT)
-        'ibanAcctNum',             // string
-        'id',                      // string
-        'includechildren',         // bool
-        'inventory',               // bool
-        'isInactive',              // bool
-        'issummary',               // bool
-        'lastModifiedDate',        // string
-        'legalname',               // string
-        'links',                   // NsLink, [read_only]
-        'localizations',           // AccountLocalizationsCollection
-        'location',                // Location
-        'mmaxamtpertran',          // float
-        'openingbalance',          // float
-        'parent',                  // Account
-        'reconcilewithmatching',   // bool
-        'refName',                 // string, [read_only]
-        'restricttoaccountingbook',// AccountingBookCollection
-        'revalue',                 // bool
-        'sachmsg',                 // string
-        'sbankcompanyid',          // string
-        'sbankname',               // string
-        'sbankroutingnumber',      // string
-        'sspecacct',               // string enum(CommPay, DeferExpense, UnbilledRec, SalesTaxPay, Tax, PSTPay, CumulTransAdj, RevArrng, DefRevClearing, Opprtnty)
-        'subsidiary',              // SubsidiaryCollection
-        'trandate',                // string
-        'unit',                    // string
-        'unitstype',               // UnitsType
-    ];    
-
-   /**
     * GET /account
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -73,23 +12,16 @@ class NSRecord_Account extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/account";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -104,23 +36,16 @@ class NSRecord_Account extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/account";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -133,9 +58,7 @@ class NSRecord_Account extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/account/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -148,17 +71,14 @@ class NSRecord_Account extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/account/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -174,23 +94,16 @@ class NSRecord_Account extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/account/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -206,22 +119,15 @@ class NSRecord_Account extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/account/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

@@ -2,90 +2,6 @@
 class NSRecord_SupportCase extends RequestAbstract
 {
    /**
-    * [supportCase]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'assigned',                // Employee
-        'autoName',                // bool
-        'caseNumber',              // string
-        'category',                // NsResource
-        'company',                 // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'companyId',               // int
-        'companyName',             // string
-        'contact',                 // Contact
-        'contactId',               // int
-        'createdDate',             // string
-        'customForm',              // string enum(-10916, -10915, -10914, -20961, -10230, -893, -892, -410, -891, -770)
-        'dateCreated',             // string
-        'email',                   // string
-        'emailEmployees',          // string
-        'emailForm',               // bool
-        'endDate',                 // string
-        'escalateHist',            // SupportCaseEscalateHistCollection
-        'escalateTo',              // CustomerCollection|PartnerCollection|VendorCollection|NsResourceCollection|EmployeeCollection|ContactCollection
-        'escalationMessage',       // string
-        'eventNumber',             // int
-        'externalId',              // string
-        'firstIssueAttached',      // string
-        'firstIssueRemoved',       // string
-        'firstUpdated',            // string
-        'helpDesk',                // bool
-        'htmlMessage',             // bool
-        'id',                      // string
-        'inboundEmail',            // string
-        'incomingMessage',         // string
-        'initialResponseTime',     // string
-        'internalOnly',            // bool
-        'isInactive',              // bool
-        'issue',                   // NsResource
-        'issues',                  // IssueCollection
-        'item',                    // InventoryItem|ServiceItem|OtherChargeItem|AssemblyItem|KitItem|NsResource|DiscountItem|MarkupItem|SubtotalItem|DescriptionItem|PaymentItem|SalesTaxItem|TaxGroup|ShipItem|DownloadItem|GiftCertificateItem|SubscriptionPlan|NonInventorySaleItem|NonInventoryResaleItem|NonInventoryPurchaseItem
-        'lastCustomerMessageReceived',// string
-        'lastIssueAttached',       // string
-        'lastIssueRemoved',        // string
-        'lastMessageDate',         // string
-        'lastModifiedDate',        // string
-        'lastReopenedDate',        // string
-        'links',                   // NsLink, [read_only]
-        'mediaItem',               // NsResourceCollection
-        'messageNew',              // bool
-        'messageSave',             // string
-        'module',                  // string
-        'origcaseNumber',          // string
-        'origin',                  // NsResource
-        'outgoingMessage',         // string
-        'phone',                   // string
-        'priority',                // NsResource
-        'product',                 // IssueProduct
-        'profile',                 // NsResource
-        'quickNote',               // string
-        'refName',                 // string, [read_only]
-        'serialNumber',            // InventoryNumber
-        'solutions',               // SolutionCollection
-        'spamLock',                // string
-        'stage',                   // string
-        'startDate',               // string
-        'startTime',               // string
-        'status',                  // NsResource
-        'subsidiary',              // Subsidiary
-        'supportFirstReply',       // string
-        'timeElapsed',             // string
-        'timeItem',                // string
-        'timeOnHold',              // string
-        'timeOpen',                // string
-        'timeToAssign',            // string
-        'timeToClose',             // string
-        'title',                   // string
-        'transactionId',           // string
-        'useEmployeeTemplate',     // bool
-        'userNotes',               // SupportCaseUserNotesCollection
-        'version',                 // string
-    ];    
-
-   /**
     * GET /supportCase
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -96,23 +12,16 @@ class NSRecord_SupportCase extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/supportCase";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -127,23 +36,16 @@ class NSRecord_SupportCase extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/supportCase";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -156,9 +58,7 @@ class NSRecord_SupportCase extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/supportCase/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -171,17 +71,14 @@ class NSRecord_SupportCase extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/supportCase/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -197,23 +94,16 @@ class NSRecord_SupportCase extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/supportCase/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -229,22 +119,15 @@ class NSRecord_SupportCase extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/supportCase/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

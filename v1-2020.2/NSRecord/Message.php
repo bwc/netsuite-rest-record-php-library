@@ -2,76 +2,6 @@
 class NSRecord_Message extends RequestAbstract
 {
    /**
-    * [message]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'activity',                // NsResource
-        'activityType',            // string enum(CALL, MFGTASK, TASK, PROJECTTASK, ISSUE, SOLUTION, RSRCALLOC, EVENT, CAMPAIGN, CASE)
-        'attachments',             // NsResourceCollection
-        'author',                  // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'authorEmail',             // string
-        'baseId',                  // string
-        'bcc',                     // string
-        'cc',                      // string
-        'compose',                 // string
-        'compressAttachments',     // bool
-        'consolStatement',         // bool
-        'contact',                 // Contact
-        'dateTime',                // string
-        'defaultFax',              // string
-        'editSource',              // bool
-        'emailPreference',         // string enum(PDF, HTML, DEFAULT)
-        'emailed',                 // bool
-        'entityType',              // string
-        'externalId',              // string
-        'faxNum',                  // string
-        'hasAttachment',           // bool
-        'id',                      // string
-        'includeStatement',        // bool
-        'includeTransaction',      // bool
-        'incoming',                // bool
-        'internalOnly',            // bool
-        'isCaseMessage',           // bool
-        'letter',                  // NsResource
-        'letterType',              // string
-        'links',                   // NsLink, [read_only]
-        'mergeFieldsMessages',     // string
-        'mergeTypesMessages',      // string
-        'message',                 // string
-        'messageDate',             // string
-        'messageType',             // string enum(PDF, MAIL, EMAILEDREPORT, EMAIL, FAX)
-        'openOnly',                // bool
-        'otherRecipientsList',     // MessageOtherRecipientsListCollection
-        'preview',                 // bool
-        'primaryRecipient',        // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'printTransaction',        // bool
-        'recipient',               // Customer|Partner|Vendor|NsResource|Employee|Contact
-        'recipientEmail',          // string
-        'recipientType',           // string
-        'recipients',              // string
-        'recordMerge',             // bool
-        'recordName',              // string
-        'recordTypeName',          // string
-        'refName',                 // string, [read_only]
-        'requestReadReceipt',      // bool
-        'senderAddressOption',     // string
-        'start_date',              // string
-        'statementPreference',     // string enum(PDF, HTML, DEFAULT)
-        'statement_date',          // string
-        'subject',                 // string
-        'subsidiary',              // Subsidiary
-        'template',                // NsResource
-        'templateCategory',        // NsResource
-        'time',                    // string
-        'to',                      // string
-        'transaction',             // NsResource
-        'updateTemplate',          // bool
-    ];    
-
-   /**
     * GET /message
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -82,23 +12,16 @@ class NSRecord_Message extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/message";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -113,23 +36,16 @@ class NSRecord_Message extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/message";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -142,9 +58,7 @@ class NSRecord_Message extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/message/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -157,17 +71,14 @@ class NSRecord_Message extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/message/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -183,23 +94,16 @@ class NSRecord_Message extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/message/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -215,22 +119,15 @@ class NSRecord_Message extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/message/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 }

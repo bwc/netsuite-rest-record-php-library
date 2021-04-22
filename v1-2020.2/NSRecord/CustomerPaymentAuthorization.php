@@ -2,97 +2,6 @@
 class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
 {
    /**
-    * [customerPaymentAuthorization]
-    * This record is available as a beta record.
-    *
-    * @var array
-    */
-    public static $schema = [
-        'authCode',                // string
-        'cardSwipe',               // string
-        'cardholderAuthentication',// CardholderAuthentication
-        'ccApproved',              // bool
-        'ccAvsStreetMatch',        // string enum(Y, N, X)
-        'ccAvsZipMatch',           // string enum(Y, N, X)
-        'ccDefault',               // bool
-        'ccExpireDate',            // string
-        'ccHoldStatus',            // string
-        'ccName',                  // string
-        'ccNumber',                // string
-        'ccProcessAsPurchaseCard', // bool
-        'ccSave',                  // bool
-        'ccSecurityCode',          // string
-        'ccSecurityCodeMatch',     // string enum(Y, N, X)
-        'ccStreet',                // string
-        'ccZipCode',               // string
-        'checkNum',                // string
-        'checkNumber',             // string
-        'class',                   // Classification
-        'createdDate',             // string
-        'creditCard',              // NsResource
-        'creditCardProcessor',     // NsResource
-        'currency',                // Currency
-        'currencyName',            // string
-        'currencyPrecision',       // int
-        'currencysymbol',          // string
-        'customForm',              // string enum(88, 89, -9960, 90, 91, -9965, 92, -9966, 93, -9967)
-        'customer',                // NsResource
-        'customerCode',            // string
-        'customerPaymentAuthorization',// CustomerPaymentAuthorization
-        'debitCardIssueNo',        // string
-        'debitKsn',                // string
-        'debitPinBlock',           // string
-        'department',              // Department
-        'depositSufficient',       // bool
-        'dynamicDescriptor',       // string
-        'entityfieldname',         // string
-        'exchangeRate',            // float
-        'excludeFromGLNumbering',  // bool
-        'externalId',              // string
-        'getAuth',                 // bool
-        'handlingMode',            // string enum(MIMIC, PROCESS, SAVE_ONLY)
-        'id',                      // string
-        'ignoreAvs',               // bool
-        'ignoreAvsVis',            // bool
-        'ignoreCsc',               // bool
-        'ignoreCscVis',            // bool
-        'inputReferenceCode',      // string
-        'integrationId',           // string
-        'isDebitCard',             // string
-        'isRecurringPayment',      // bool
-        'lastModifiedDate',        // string
-        'links',                   // NsLink, [read_only]
-        'location',                // Location
-        'memo',                    // string
-        'outputAuthCode',          // string
-        'outputReferenceCode',     // string
-        'payment',                 // float
-        'paymentCardCsc',          // string
-        'paymentMethod',           // PaymentMethod
-        'paymentMethodAccount',    // string
-        'paymentOperation',        // string enum(CREDIT, OVERRIDE, SALE, REFUND, AUTHENTICATION, REFRESH, VOID, CAPTURE, AUTHORIZATION)
-        'paymentOption',           // NsResource
-        'paymentProcessingProfile',// NsResource
-        'paymentSessionAmount',    // float
-        'pnRefNum',                // string
-        'prevDate',                // string
-        'refName',                 // string, [read_only]
-        'salesOrder',              // SalesOrder
-        'salesOrderRequiredDepositDue',// float
-        'salesOrderUnpaidAmount',  // float
-        'softDescriptor',          // string
-        'status',                  // string enum(A, B, C, D, E, F, G, H, I, J)
-        'subsidiary',              // Subsidiary
-        'threedStatusCode',        // string
-        'threedStatusCodeVis',     // bool
-        'tranDate',                // string
-        'tranId',                  // string
-        'transactionToRefund',     // NsResource
-        'updatecurrency',          // string
-        'validFrom',               // string
-    ];    
-
-   /**
     * GET /customerPaymentAuthorization
     * 
     * @param string $q                 Search query used to filter results. (in query)
@@ -103,23 +12,16 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     */
     public function getListOfRecords($q = null, $limit = null, $offset = null)
     {
-        $parts = [];
         $path = "/customerPaymentAuthorization";
-        if ($q) {
-            $parts[] = 'q=' . urlencode((string)$q);
-        }
-        if ($limit) {
-            $parts[] = 'limit=' . urlencode((string)$limit);
-        }
-        if ($offset) {
-            $parts[] = 'offset=' . urlencode((string)$offset);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'q' => $q,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -134,23 +36,16 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     */
     public function insertRecord($body, $replace = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null)
     {
-        $parts = [];
         $path = "/customerPaymentAuthorization";
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -163,9 +58,7 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     public function removeRecord($id = null)
     {
         $path = "/customerPaymentAuthorization/$id";
-        $response = $this->_makeRequest('DELETE', $path);
-
-        return $response;
+        return $this->_makeRequest('DELETE', $path, []);
     }
 
    /**
@@ -178,17 +71,14 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     */
     public function getRecord($id = null, $expandSubResources = null)
     {
-        $parts = [];
         $path = "/customerPaymentAuthorization/$id";
-        if ($expandSubResources) {
-            $parts[] = 'expandSubResources=' . urlencode((string)$expandSubResources);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('GET', $path);
+        $args = $this->_argsToHttpParams(
+            [
+                'expandSubResources' => $expandSubResources,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('GET', $path, $args);
     }
 
    /**
@@ -204,23 +94,16 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     */
     public function updateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/customerPaymentAuthorization/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PATCH', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PATCH', $path, $args, $body);
     }
 
    /**
@@ -236,23 +119,16 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     */
     public function insertOrUpdateRecord($body, $id = null, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null)
     {
-        $parts = [];
         $path = "/customerPaymentAuthorization/$id";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('PUT', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('PUT', $path, $args, $body);
     }
 
    /**
@@ -268,23 +144,16 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     */
     public function transformToCustomerDeposit($body, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null, $id = null)
     {
-        $parts = [];
         $path = "/customerPaymentAuthorization/$id/!transform/customerDeposit";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 
    /**
@@ -300,22 +169,15 @@ class NSRecord_CustomerPaymentAuthorization extends RequestAbstract
     */
     public function transformToCustomerPayment($body, $xNetSuitePropertyNameValidation = null, $xNetSuitePropertyValueValidation = null, $replace = null, $id = null)
     {
-        $parts = [];
         $path = "/customerPaymentAuthorization/$id/!transform/customerPayment";
-        if ($xNetSuitePropertyNameValidation) {
-            $parts[] = 'X-NetSuite-PropertyNameValidation=' . urlencode((string)$xNetSuitePropertyNameValidation);
-        }
-        if ($xNetSuitePropertyValueValidation) {
-            $parts[] = 'X-NetSuite-PropertyValueValidation=' . urlencode((string)$xNetSuitePropertyValueValidation);
-        }
-        if ($replace) {
-            $parts[] = 'replace=' . urlencode((string)$replace);
-        }
-        if ($parts) {
-            $path .= '?' . implode('&', $parts);
-        }
-        $response = $this->_makeRequest('POST', $path, $body);
+        $args = $this->_argsToHttpParams(
+            [
+                'X-NetSuite-PropertyNameValidation' => $xNetSuitePropertyNameValidation,
+                'X-NetSuite-PropertyValueValidation' => $xNetSuitePropertyValueValidation,
+                'replace' => $replace,
+            ]
+        );
 
-        return $response;
+        return $this->_makeRequest('POST', $path, $args, $body);
     }
 }
