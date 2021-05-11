@@ -7,6 +7,8 @@ class RequestAbstract
     const RECORD_API_VERSION = '1.0';
     const SIGNATURE_METHOD = 'HMAC-SHA256';
     const BASE_URL_PATTERN = 'https://%s.suitetalk.api.netsuite.com/services/rest/record/v1';
+    const ERROR_CODE_USER_ERROR_OR_INVALID_INTERNAL_ID = 'USER_ERROR',
+        ERROR_CODE_NONEXISTENT_EXTERNAL_ID = 'NONEXISTENT_EXTERNAL_ID';
 
     /**
      * @var array
@@ -37,13 +39,14 @@ class RequestAbstract
      * @param string|array $body
      * @param int $tries
      * @param array $additionalHeaders
-     * @return stdClass
+     * @return array
      * @throws NetsuiteException
      */
     protected function _makeRequest($method, $path, $params = [], $body = '', $additionalHeaders = [], $tries = 3)
     {
-        for ($i = 0; $i < $tries; $i++) {
+        for ($i = 1; $i <= $tries; $i++) {
             try {
+                $json = [];
                 $generatedParams = $this->_generateParams();
                 $signatureParams = array_merge(
                     $params,
@@ -132,21 +135,22 @@ class RequestAbstract
                 $response = curl_exec($curl);
                 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                 curl_close($curl);
-
-                if (!$this->_isHttpOk($httpCode)) {
-                    throw new NetsuiteException(
-                        sprintf(
-                            '[HTTP:%d] NS Request Failed, tries: %d, no body returned, method: %s, path: %s, json: %s',
-                            $httpCode,
-                            $tries,
-                            $method,
-                            $path,
-                            $response
-                        )
-                    );
-                }
                 if ($response) {
                     $json = json_decode($response, true);
+
+                    if (!$this->_isHttpOk($httpCode)) {
+                        throw new NetsuiteException(
+                            sprintf(
+                                '[HTTP:%d] NS Request Failed, tries: %d, no body returned, method: %s, path: %s, json: %s',
+                                $httpCode,
+                                $tries,
+                                $method,
+                                $path,
+                                $response
+                            )
+                        );
+                    }
+
                     if (isset($json['status']) && is_numeric($json['status']) && !$this->_isHttpOk($json['status'])) {
                         usleep(100 * $i);
                         throw new NetsuiteException(
@@ -168,12 +172,25 @@ class RequestAbstract
                 }
                 break;
             } catch (NetsuiteException $e) {
-                $isUserError = isset($json['o:errorDetails'][0]['o:errorCode'])
-                    && $json['o:errorDetails'][0]['o:errorCode'] === 'USER_ERROR';
-                if ($isUserError || $i === 2) {
+                $errorCode = isset($json['o:errorDetails'][0]['o:errorCode'])
+                    ? $json['o:errorDetails'][0]['o:errorCode']
+                    : null;
+                $isUserError = $errorCode === self::ERROR_CODE_USER_ERROR_OR_INVALID_INTERNAL_ID;
+                $isNotExist = $errorCode === self::ERROR_CODE_NONEXISTENT_EXTERNAL_ID;
+                if (!$isUserError && !$isNotExist) {
+                    echo sprintf(
+                        "[%d/%d] Request failed: %s %s (params:%s|body:%s), %s\n",
+                        $i,
+                        $tries,
+                        $method,
+                        $path,
+                        json_encode($params),
+                        json_encode($body),
+                        ($i > $tries) ? 'Failed.' : 'Retrying...'
+                    );
+                }
+                if ($isUserError || $isNotExist || $i === $tries) {
                     throw $e;
-                } else {
-                    continue;
                 }
             }
         }
